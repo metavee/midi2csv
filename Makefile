@@ -7,7 +7,7 @@ INSTALL_DEST = /usr/local
 #	You shouldn't need to change anything after this line
 
 VERSION = 1.1
-PROGRAMS = midicsv.js csvmidi.js
+PROGRAMS = midicsv.html csvmidi.html
 MANPAGES = $(PROGRAMS:%=%.1) midicsv.5
 DOC = README log.txt
 BUILD = Makefile
@@ -24,8 +24,8 @@ all:	$(PROGRAMS)
 
 MIDICSV_OBJ = midicsv.o midio.o getopt.o
 
-midicsv.js:    $(MIDICSV_OBJ)
-	$(CC) $(CFLAGS) -o midicsv.js midicsv.o midio.o getopt.o
+midicsv.html:    $(MIDICSV_OBJ)
+	$(CC) $(CFLAGS) -o midicsv.html midicsv.o midio.o getopt.o
 	
 Midicsv.exe: $(MIDICSV_OBJ:%.o=%.c)
 	@echo 'Yar!  Midicsv.exe needs to be rebuilt on WIN32!'
@@ -33,8 +33,8 @@ Midicsv.exe: $(MIDICSV_OBJ:%.o=%.c)
 
 CSVMIDI_OBJ = csvmidi.o midio.o csv.o getopt.o
 
-csvmidi.js:    $(CSVMIDI_OBJ)
-	$(CC) $(CFLAGS) -o csvmidi.js csvmidi.o midio.o csv.o getopt.o
+csvmidi.html:    $(CSVMIDI_OBJ)
+	$(CC) $(CFLAGS) -o csvmidi.html csvmidi.o midio.o csv.o getopt.o
 	
 Csvmidi.exe: $(CSVMIDI_OBJ:%.o=%.c)
 	@echo 'Yar!  Csvmidi.exe needs to be rebuilt on WIN32!'
