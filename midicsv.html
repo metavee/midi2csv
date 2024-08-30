@@ -22,7 +22,7 @@
           FS.writeFile('/input.midi', byteArray);
 
           // Call your WebAssembly function
-          Module._convert();
+          Module._midicsv();
 
           // Read the output file from MEMFS
           var output = FS.readFile('/output.csv');
@@ -44,6 +44,6 @@
       }
     };
   </script>
-  <script src="midicsv.js"></script>
+  <script src="csvmidi.js"></script>
 </body>
 </html>

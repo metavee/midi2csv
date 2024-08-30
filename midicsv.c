@@ -384,7 +384,7 @@ fprintf(fo, " (Len=%ld  Trk=%02x) ", len, *trk);
 
 /*  Main program.  */
 
-int convert()
+int midicsv()
 {
     struct mhead mh;
     FILE *fp, *fo;
