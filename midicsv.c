@@ -472,5 +472,8 @@ int midicsv()
     free(trk);
     }
     fprintf(fo, "0, 0, End_of_file\n");
+    
+    fclose(fp);
+    fclose(fo);
     return 0;
 }

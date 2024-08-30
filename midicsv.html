@@ -5,13 +5,19 @@
 </head>
 <body>
   <h1>MIDI-CSV Converter</h1>
-  <input type="file" id="fileInput" />
-  <button onclick="convertFile()">Convert</button>
-  <script>
-    var fileInput = document.getElementById('fileInput');
+  <input type="file" id="midiInput" />
+  <button onclick="convertMidiCsv()">Convert MIDI to CSV</button>
 
-    function convertFile() {
-      var file = fileInput.files[0];
+  <h1>CSV-MIDI Converter</h1>
+  <input type="file" id="csvInput" />
+  <button onclick="convertCsvMidi()">Convert CSV to MIDI</button>
+
+  <script>
+    var midiInput = document.getElementById('midiInput');
+    var csvInput = document.getElementById('csvInput');
+
+    function convertMidiCsv() {
+      var file = midiInput.files[0];
       if (file) {
         var reader = new FileReader();
         reader.onload = function(e) {
@@ -31,6 +37,33 @@
           var link = document.createElement('a');
           link.href = url;
           link.download = 'output.csv';
+          link.click();
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+
+    function convertCsvMidi() {
+      var file = csvInput.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var arrayBuffer = e.target.result;
+          var byteArray = new Uint8Array(arrayBuffer);
+
+          // Write the file to MEMFS
+          FS.writeFile('/input.csv', byteArray);
+
+          // Call your WebAssembly function
+          Module._csvmidi();
+
+          // Read the output file from MEMFS
+          var output = FS.readFile('/output.midi');
+          var blob = new Blob([output], { type: 'audio/midi' });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement('a');
+          link.href = url;
+          link.download = 'output.midi';
           link.click();
         };
         reader.readAsArrayBuffer(file);

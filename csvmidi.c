@@ -110,7 +110,6 @@ static struct mitem mitems[] = {
     { "End_of_file", Marker(End_of_file) },
 };
 
-static char *progname;		      /* Program name string */
 static int verbose = FALSE; 	      /* Debug output */
 static int zerotol = FALSE;    	      /* Any warning terminates processing */
 static int errors = 0;	    	      /* Errors and warnings detected */
@@ -386,8 +385,7 @@ static void clamp(long *value, const long minval, const long maxval, const char 
 }
 
 /*  Main program  */
-int csvmidi() {return 0;}
-int main(int argc, char *argv[])
+int csvmidi() 
 {
     struct mhead mh;
     struct mtrack mt;
@@ -397,73 +395,26 @@ int main(int argc, char *argv[])
     char errm[256];
     long tl;
 
-    /* Parse command line arguments. */
+    char * infn = "input.csv";
+    char * outfn = "output.midi";
 
-    progname = argv[0];
     csvline = s;
-    while ((n = getopt(argc, argv, "uvxz")) != -1) {
-	switch (n) {
-            case 'u':
-                fprintf(stderr, "Usage: %s [ options ] [ csv_file ] [ midi_file ]\n", progname);
-                fprintf(stderr, "       Options:\n");
-                fprintf(stderr, "           -u            Print this message\n");
-                fprintf(stderr, "           -v            Verbose: dump header and track information\n");
-                fprintf(stderr, "           -x            Expand running status\n");
-                fprintf(stderr, "           -z            Abort on any warning message\n");
-		fprintf(stderr, "Version %s\n", VERSION);
-		return 0;
-
-            case 'v':
-		verbose = TRUE;
-		break;
-
-            case 'x':
-		optimiseStatus = FALSE;
-		break;
-
-            case 'z':
-		zerotol = TRUE;
-		break;
-
-            case '?':
-                fprintf(stderr, "%s: undefined option -%c specified.\n",
-		    PROG, n);
-		return 2;
-	}
-    }
 
     /* Open input and output files, if supplied.  Otherwise
        standard input and output are used.  A file name of
        "-" is equivalent to no specification. */
-
-    i = 0;
-    while (optind < argc) {
-	switch (i++) {
-	    case 0:
-                if (strcmp(argv[optind], "-") != 0) {
-                    fp = fopen(argv[optind], "r");
-		    if (fp == NULL) {
-                        fprintf(stderr, "%s: Unable to to open CSV input file %s\n",
-				PROG, argv[optind]);
-			return 2;
-		    }
-		}
-		break;
-
-	    case 1:
-                if (strcmp(argv[optind], "-") != 0) {
-                    fo = fopen(argv[optind], "wb");
-		    if (fo == NULL) {
-                        fprintf(stderr, "%s: Unable to to create MIDI output file %s\n",
-				PROG, argv[optind]);
-			return 2;
-		    }
-		}
-		break;
+	fp = fopen(infn, "r");
+	if (fp == NULL) {
+		fprintf(stderr, "Unable to to open CSV input file %s\n", infn);
+		return 2;
 	}
-	optind++;
-    }
-    
+
+	fo = fopen(outfn, "wb");
+	if (fo == NULL) {
+		fprintf(stderr, "Unable to to create MIDI output file %s\n", outfn);
+		return 2;
+	}
+
 #ifdef _WIN32
 
     /*  If output is to standard output, set the output
@@ -844,6 +795,7 @@ int main(int argc, char *argv[])
 	}
     }
     fclose(fp);
+	fclose(fo);
 
     if (!eofseen) {
         fprintf(stderr, "%s: Missing End_of_file record.\n", PROG);
