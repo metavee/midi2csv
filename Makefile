@@ -9,7 +9,7 @@ PROGRAMS = csvmidi.js
 MANPAGES = $(PROGRAMS:%=%.1) midicsv.5
 DOC = README log.txt
 BUILD = Makefile
-SOURCE = csv.c csvmidi.c midicsv.c midio.c getopt.c getopt.h
+SOURCE = csv.c csvmidi.c midicsv.c midio.c
 HEADERS = csv.h midifile.h midio.h types.h version.h
 EXAMPLES = test.mid bad.csv ce3k.csv acomp.pl chorus.pl \
 	count_events.pl drummer.pl exchannel.pl general_midi.pl \
@@ -17,11 +17,11 @@ EXAMPLES = test.mid bad.csv ce3k.csv acomp.pl chorus.pl \
 
 all:	$(PROGRAMS)
 
-MIDICSV_OBJ = midicsv.o midio.o getopt.o
-CSVMIDI_OBJ = csvmidi.o midio.o csv.o getopt.o
+MIDICSV_OBJ = midicsv.o midio.o
+CSVMIDI_OBJ = csvmidi.o midio.o csv.o
 
 csvmidi.js:    $(CSVMIDI_OBJ) $(MIDICSV_OBJ)
-	$(CC) $(CFLAGS) -o csvmidi.js csvmidi.o midicsv.o midio.o csv.o getopt.o
+	$(CC) $(CFLAGS) -o csvmidi.js csvmidi.o midicsv.o midio.o csv.o
 
 check:	all
 	@./midicsv test.mid /tmp/test.csv

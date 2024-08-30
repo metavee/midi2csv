@@ -24,7 +24,6 @@
 #include "types.h"
 #include "midifile.h"
 #include "midio.h"
-#include "getopt.h"
 
 #define FALSE	0
 #define TRUE	1
@@ -472,7 +471,7 @@ int midicsv()
     free(trk);
     }
     fprintf(fo, "0, 0, End_of_file\n");
-    
+
     fclose(fp);
     fclose(fo);
     return 0;

@@ -32,7 +32,6 @@
 #include "midifile.h"
 #include "midio.h"
 #include "csv.h"
-#include "getopt.h"
 
 /*  List of comment delimiters recognised in CSV files.
     These are whole-line comments which must be marked
