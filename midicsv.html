@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MIDI-CSV Converter</title>
+</head>
+<body>
+  <h1>MIDI-CSV Converter</h1>
+  <input type="file" id="fileInput" />
+  <button onclick="convertFile()">Convert</button>
+  <script>
+    var fileInput = document.getElementById('fileInput');
+
+    function convertFile() {
+      var file = fileInput.files[0];
+      if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var arrayBuffer = e.target.result;
+          var byteArray = new Uint8Array(arrayBuffer);
+
+          // Write the file to MEMFS
+          FS.writeFile('/input.midi', byteArray);
+
+          // Call your WebAssembly function
+          Module._convert();
+
+          // Read the output file from MEMFS
+          var output = FS.readFile('/output.csv');
+          var blob = new Blob([output], { type: 'text/csv' });
+          var url = URL.createObjectURL(blob);
+          var link = document.createElement('a');
+          link.href = url;
+          link.download = 'output.csv';
+          link.click();
+        };
+        reader.readAsArrayBuffer(file);
+      }
+    }
+
+    // Load the WebAssembly module
+    var Module = {
+      onRuntimeInitialized: function() {
+        console.log('WebAssembly module loaded');
+      }
+    };
+  </script>
+  <script src="midicsv.js"></script>
+</body>
+</html>

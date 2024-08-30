@@ -386,7 +386,7 @@ static void clamp(long *value, const long minval, const long maxval, const char 
 }
 
 /*  Main program  */
-
+int convert() {return 0;}
 int main(int argc, char *argv[])
 {
     struct mhead mh;
