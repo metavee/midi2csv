@@ -12,6 +12,8 @@
   <input type="file" id="csvInput" />
   <button onclick="convertCsvMidi()">Convert CSV to MIDI</button>
 
+  <div id="outputTable"></div>
+
   <script>
     var midiInput = document.getElementById('midiInput');
     var csvInput = document.getElementById('csvInput');
@@ -31,13 +33,15 @@
           Module._midicsv();
 
           // Read the output file from MEMFS
-          var output = FS.readFile('/output.csv');
+          var output = FS.readFile('/output.csv', { encoding: 'utf8' });
           var blob = new Blob([output], { type: 'text/csv' });
           var url = URL.createObjectURL(blob);
           var link = document.createElement('a');
           link.href = url;
           link.download = 'output.csv';
           link.click();
+
+          displayCSVAsTable(output);
         };
         reader.readAsArrayBuffer(file);
       }
@@ -68,6 +72,36 @@
         };
         reader.readAsArrayBuffer(file);
       }
+    }
+
+    function sanitizeHTML(str) {
+      var temp = document.createElement('div');
+      temp.textContent = str;
+      return temp.innerHTML;
+    }
+
+    function displayCSVAsTable(csv) {
+      const lines = csv.split('\n');
+      let table = '<table><thead><tr>';
+      table += '<th>Track</th>';
+      table += '<th>Time</th>';
+      table += '<th>Type</th>';
+      table += '<th>Channel</th>';
+      table += '<th>Note</th>';
+      table += '<th>Velocity</th>';
+      table += '</tr></thead><tbody>';
+      
+      lines.forEach((line, index) => {
+        const cells = line.split(',');
+        table += '<tr>';
+        cells.forEach(cell => {
+          table += `<td>${sanitizeHTML(cell.trim())}</td>`;
+        });
+        table += '</tr>';
+      });
+
+      table += '</tbody></table>';
+      document.getElementById('outputTable').innerHTML = table;
     }
 
     // Load the WebAssembly module
