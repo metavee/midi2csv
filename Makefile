@@ -35,11 +35,14 @@ check:	all
 	@rm -f /tmp/test.csv /tmp/w.mid /tmp/w1.csv
 	
 torture: all
-	perl torture.pl | ./csvmidi | tee /tmp/w.mid | ./midicsv | ./csvmidi >/tmp/w1.mid
+	perl torture.pl > /tmp/torture.csv
+	node ./midicsv_node_cli.js /tmp/torture.csv /tmp/w.mid
+	node ./midicsv_node_cli.js /tmp/w.mid /tmp/torture1.csv
+	node ./midicsv_node_cli.js /tmp/torture1.csv /tmp/w1.mid
 	@cmp /tmp/w.mid /tmp/w1.mid ; if test $$? -ne 0  ; then \
 	    echo '** midicsv/csvmidi: Torture test CSV file comparison failed. **' ; else \
 	    echo 'Torture test passed.' ; fi
-	@rm /tmp/w.mid /tmp/w1.mid
+	@rm /tmp/w.mid /tmp/w1.mid /tmp/torture.csv /tmp/torture1.csv
 
 clean:
 	rm -f $(PROGRAMS) *.o *.bak core core.* *.out midicsv.zip *.wasm
