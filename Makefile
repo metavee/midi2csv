@@ -1,6 +1,6 @@
 
 CC = emcc
-CFLAGS = -g -Wall -s EXPORTED_RUNTIME_METHODS='["FS"]' -s EXPORTED_FUNCTIONS='["_csvmidi", "_midicsv"]'
+CFLAGS = -O2 -s EXPORTED_RUNTIME_METHODS='["FS"]' -s EXPORTED_FUNCTIONS='["_csvmidi", "_midicsv"]'
 
 #	You shouldn't need to change anything after this line
 
