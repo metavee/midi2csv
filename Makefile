@@ -24,20 +24,15 @@ csvmidi.js:    $(CSVMIDI_OBJ) $(MIDICSV_OBJ)
 	$(CC) $(CFLAGS) -o csvmidi.js csvmidi.o midicsv.o midio.o csv.o
 
 check:	all
-	@./midicsv test.mid /tmp/test.csv
-	@./csvmidi /tmp/test.csv /tmp/w.mid
-	@./midicsv /tmp/w.mid /tmp/w1.csv
+	@node ./midicsv_node_cli.js test.mid /tmp/test.csv
+	@node ./midicsv_node_cli.js /tmp/test.csv /tmp/w.mid
+	@node ./midicsv_node_cli.js /tmp/w.mid /tmp/w1.csv
 	@-cmp -s test.mid /tmp/w.mid ; if test $$? -ne 0  ; then \
 	    echo '** midicsv/csvmidi: MIDI file comparison failed. **' ; else \
 	diff -q /tmp/test.csv /tmp/w1.csv ; if test $$? -ne 0  ; then \
 	    echo '** midicsv/csvmidi: CSV file comparison failed. **' ; else \
 	    echo 'All tests passed.' ; fi ; fi
 	@rm -f /tmp/test.csv /tmp/w.mid /tmp/w1.csv
-
-pipetest: all
-	./midicsv test.mid | tee /tmp/test.csv | ./csvmidi | ./midicsv - /tmp/w1.csv
-	diff /tmp/test.csv /tmp/w1.csv
-	rm /tmp/test.csv /tmp/w1.csv
 	
 torture: all
 	perl torture.pl | ./csvmidi | tee /tmp/w.mid | ./midicsv | ./csvmidi >/tmp/w1.mid
