@@ -1,16 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MIDI-CSV Converter</title>
+  <title>midi2csv</title>
 </head>
 <body>
-  <h1>MIDI-CSV Converter</h1>
+  <h1>midi2csv</h1>
+
+  <p>Convert MIDI to CSV and back! Visualize the internals of the MIDI file format! Perform audio editing with surgical precision in your favourite <s>DAW</s> spreadsheet application!</p>
+
+  <p>This is a WebAssembly port of John Walker's <a target="_blank" href="https://www.fourmilab.ch/webtools/midicsv/">midicsv</a> project.</p>
+
+  <details>
+    <summary>What is MIDI?</summary>
+
+    <p>MIDI is a protocol and file format that allow digital instruments to communicate.</p>
+
+    <p>In simple terms, it's like digital sheet music: it has a series of commands that describe what note to play, at what time, on what instrument.</p>
+  </details>
+
+  <h2>MIDI to CSV</h2>
+
+  <p>Upload a MIDI file to convert it to CSV:</p>
+
   <input type="file" id="midiInput" onchange="convertMidiCsv()" />
 
-  <h1>CSV-MIDI Converter</h1>
+  <div id="outputTable"></div>
+
+  <h2>CSV to MIDI</h2>
+
+  <p>Upload a CSV file to convert it back to MIDI:</p>
+
   <input type="file" id="csvInput" onchange="convertCsvMidi()" />
 
-  <div id="outputTable"></div>
+  <div id="outputMidi"></div>
 
   <script>
     var midiInput = document.getElementById('midiInput');
