@@ -5,12 +5,10 @@
 </head>
 <body>
   <h1>MIDI-CSV Converter</h1>
-  <input type="file" id="midiInput" />
-  <button onclick="convertMidiCsv()">Convert MIDI to CSV</button>
+  <input type="file" id="midiInput" onchange="convertMidiCsv()" />
 
   <h1>CSV-MIDI Converter</h1>
-  <input type="file" id="csvInput" />
-  <button onclick="convertCsvMidi()">Convert CSV to MIDI</button>
+  <input type="file" id="csvInput" onchange="convertCsvMidi()" />
 
   <div id="outputTable"></div>
 
