@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Load the Emscripten-generated module
-const Module = require('./csvmidi.js');
+const Module = require('./dist/csvmidi.js');
 
 // Function to convert MIDI to CSV
 function convertMidiToCsv(inputPath, outputPath) {
