@@ -36,7 +36,20 @@ jobs:
         run: make all
       - name: Test
         run: make check
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
-            path: dist/
-            if-no-files-found: error        
+            path: dist/   
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs:
+        - build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
