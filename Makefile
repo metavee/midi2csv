@@ -24,25 +24,25 @@ csvmidi.js:    $(CSVMIDI_OBJ) $(MIDICSV_OBJ)
 	$(CC) $(CFLAGS) -o csvmidi.js csvmidi.o midicsv.o midio.o csv.o
 
 check:	all
-	@node ./midicsv_node_cli.js test.mid /tmp/test.csv
-	@node ./midicsv_node_cli.js /tmp/test.csv /tmp/w.mid
-	@node ./midicsv_node_cli.js /tmp/w.mid /tmp/w1.csv
-	@-cmp -s test.mid /tmp/w.mid ; if test $$? -ne 0  ; then \
+	@node ./midicsv_node_cli.js test.mid test.csv
+	@node ./midicsv_node_cli.js test.csv w.mid
+	@node ./midicsv_node_cli.js w.mid w1.csv
+	@-cmp -s test.mid w.mid ; if test $$? -ne 0  ; then \
 	    echo '** midicsv/csvmidi: MIDI file comparison failed. **' ; else \
-	diff -q /tmp/test.csv /tmp/w1.csv ; if test $$? -ne 0  ; then \
+	diff -q test.csv w1.csv ; if test $$? -ne 0  ; then \
 	    echo '** midicsv/csvmidi: CSV file comparison failed. **' ; else \
 	    echo 'All tests passed.' ; fi ; fi
-	@rm -f /tmp/test.csv /tmp/w.mid /tmp/w1.csv
+	@rm -f test.csv w.mid w1.csv
 	
 torture: all
-	perl torture.pl > /tmp/torture.csv
-	node ./midicsv_node_cli.js /tmp/torture.csv /tmp/w.mid
-	node ./midicsv_node_cli.js /tmp/w.mid /tmp/torture1.csv
-	node ./midicsv_node_cli.js /tmp/torture1.csv /tmp/w1.mid
-	@cmp /tmp/w.mid /tmp/w1.mid ; if test $$? -ne 0  ; then \
+	perl torture.pl > torture.csv
+	node ./midicsv_node_cli.js torture.csv w.mid
+	node ./midicsv_node_cli.js w.mid torture1.csv
+	node ./midicsv_node_cli.js torture1.csv w1.mid
+	@cmp w.mid w1.mid ; if test $$? -ne 0  ; then \
 	    echo '** midicsv/csvmidi: Torture test CSV file comparison failed. **' ; else \
 	    echo 'Torture test passed.' ; fi
-	@rm /tmp/w.mid /tmp/w1.mid /tmp/torture.csv /tmp/torture1.csv
+	@rm w.mid w1.mid torture.csv torture1.csv
 
 clean:
 	rm -f $(PROGRAMS) *.o *.bak core core.* *.out midicsv.zip *.wasm
