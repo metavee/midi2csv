@@ -5,7 +5,7 @@ CFLAGS = -O2 -s EXPORTED_RUNTIME_METHODS='["FS"]' -s EXPORTED_FUNCTIONS='["_csvm
 #	You shouldn't need to change anything after this line
 
 VERSION = 1.1
-PROGRAMS = csvmidi.js
+PROGRAMS = dist/csvmidi.js
 MANPAGES = $(PROGRAMS:%=%.1) midicsv.5
 DOC = README log.txt
 BUILD = Makefile
@@ -20,8 +20,11 @@ all:	$(PROGRAMS)
 MIDICSV_OBJ = midicsv.o midio.o
 CSVMIDI_OBJ = csvmidi.o midio.o csv.o
 
-csvmidi.js:    $(CSVMIDI_OBJ) $(MIDICSV_OBJ)
-	$(CC) $(CFLAGS) -o csvmidi.js csvmidi.o midicsv.o midio.o csv.o
+dist:
+	mkdir $@
+
+dist/csvmidi.js: dist $(CSVMIDI_OBJ) $(MIDICSV_OBJ)
+	$(CC) $(CFLAGS) -o ./dist/csvmidi.js csvmidi.o midicsv.o midio.o csv.o
 
 check:	all
 	@node ./midicsv_node_cli.js test.mid test.csv
@@ -45,4 +48,4 @@ torture: all
 	@rm w.mid w1.mid torture.csv torture1.csv
 
 clean:
-	rm -f $(PROGRAMS) *.o *.bak core core.* *.out midicsv.zip *.wasm
+	rm -f $(PROGRAMS) *.o *.bak core core.* *.out midicsv.zip dist/*.wasm
