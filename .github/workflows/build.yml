@@ -30,7 +30,7 @@ jobs:
             node-version: 20
       - name: Check tools
         run: |
-            nvcc -v
+            emcc -v
             node -v
       - name: Build
         run: make all
