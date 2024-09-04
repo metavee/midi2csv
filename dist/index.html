@@ -2,23 +2,32 @@
 <html>
 <head>
   <title>midi2csv</title>
+  <link rel="stylesheet" href="css/pico.min.css">
 </head>
 <body>
-  <h1>midi2csv</h1>
+  <main class="container">
+  <nav>
+    <ul>
+      <li><kbd>midi2csv</kbd></li>
+    </ul>
+    <ul>
+      <li><a href="https://github.com/metavee/midi2csv">Github</a></li>
+    </ul>
+  </nav>
 
   <p>Convert MIDI to CSV and back! Visualize the internals of the MIDI file format! Perform audio editing with surgical precision in your favourite <s>DAW</s> spreadsheet application!</p>
 
   <p>This is a WebAssembly port of John Walker's <a target="_blank" href="https://www.fourmilab.ch/webtools/midicsv/">midicsv</a> project.</p>
 
-  <details>
-    <summary>What is MIDI?</summary>
+  <details style="width: 90%; margin: 5%">
+    <summary role="button" class="outline">What is MIDI?</summary>
 
-    <p>MIDI is a protocol and file format that allow digital instruments to communicate.</p>
+    <p>MIDI is a protocol and file format. Digital instruments use it to communicate.</p>
 
     <p>In simple terms, it's like digital sheet music: it has a series of commands that describe what note to play, at what time, on what instrument.</p>
   </details>
 
-  <h2>MIDI to CSV</h2>
+  <h3>MIDI to CSV</h3>
 
   <p>Upload a MIDI file to convert it to CSV:</p>
 
@@ -26,13 +35,14 @@
 
   <div id="outputTable"></div>
 
-  <h2>CSV to MIDI</h2>
+  <h3>CSV to MIDI</h3>
 
   <p>Upload a CSV file to convert it back to MIDI:</p>
 
   <input type="file" id="csvInput" onchange="convertCsvMidi()" />
 
   <div id="outputMidi"></div>
+  </main>
 
   <script>
     var midiInput = document.getElementById('midiInput');
@@ -102,7 +112,8 @@
 
     function displayCSVAsTable(csv) {
       const lines = csv.split('\n');
-      let table = '<table><thead><tr>';
+      let table = '<details style="width: 90%; margin: 5%" open><summary role="button" class="">CSV preview</summary>';
+      table += '<table><thead><tr>';
       table += '<th>Track</th>';
       table += '<th>Time</th>';
       table += '<th>Type</th>';
@@ -110,6 +121,7 @@
       table += '<th>Note</th>';
       table += '<th>Velocity</th>';
       table += '</tr></thead><tbody>';
+        table += '</details>';
       
       lines.forEach((line, index) => {
         const cells = line.split(',');
