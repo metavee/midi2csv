@@ -112,7 +112,8 @@
 
     function displayCSVAsTable(csv) {
       const lines = csv.split('\n');
-      let table = '<table><thead><tr>';
+      let table = '<details style="width: 90%; margin: 5%" open><summary role="button" class="">CSV preview</summary>';
+      table += '<table><thead><tr>';
       table += '<th>Track</th>';
       table += '<th>Time</th>';
       table += '<th>Type</th>';
@@ -120,6 +121,7 @@
       table += '<th>Note</th>';
       table += '<th>Velocity</th>';
       table += '</tr></thead><tbody>';
+        table += '</details>';
       
       lines.forEach((line, index) => {
         const cells = line.split(',');
