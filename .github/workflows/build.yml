@@ -40,7 +40,7 @@ jobs:
         with:
             path: dist/   
   deploy:
-    if: github.ref == 'refs/heads/main'
+    # if: github.ref == 'refs/heads/main'
     needs:
         - build
     environment:
