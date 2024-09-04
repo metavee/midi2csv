@@ -25,6 +25,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - uses: mymindstorm/setup-emsdk@v14
+      - uses: actions/setup-node@v4
+        with:
+            node-version: 20
+      - name: Check tools
+        run: |
+            nvcc -v
+            node -v
       - name: Build
         run: make all
       - name: Test
