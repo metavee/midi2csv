@@ -32,12 +32,7 @@
 
   <p>Upload a MIDI file to convert it to CSV:</p>
 
-  <div class="midi-player">
-    <input type="file" id="midiInput" onchange="convertMidiCsv()" />
-    <input type="range" id="midiInputPos" min="0" max="100" value="0" disabled>
-    <button type="button" id="midiInputPlayButton">⏯</button>
-    <button type="button"id="midiInputStopButton">⏹</button>
-  </div>
+  <input type="file" id="midiInput" onchange="convertMidiCsv()" />
 
   <div id="outputTable"></div>
 
@@ -47,7 +42,11 @@
 
   <input type="file" id="csvInput" onchange="convertCsvMidi()" />
 
-  <div id="outputMidi"></div>
+  <div id="outputMidi" class="midi-player" hidden>
+    <input type="range" id="outputMidiPos" min="0" max="100" value="0" disabled>
+    <button type="button" id="outputMidiPlayButton">⏯</button>
+    <button type="button"id="outputMidiStopButton">⏹</button>
+  </div>
   </main>
 
   <script>
@@ -99,12 +98,18 @@
 
           // Read the output file from MEMFS
           var output = FS.readFile('/output.midi');
+          
           var blob = new Blob([output], { type: 'audio/midi' });
           var url = URL.createObjectURL(blob);
           var link = document.createElement('a');
           link.href = url;
           link.download = 'output.midi';
           link.click();
+          
+          // trigger MIDI player on output
+          player.openFile(output);
+          const midiPlayerDiv = document.getElementById('outputMidi');
+          midiPlayerDiv.hidden = false;
         };
         reader.readAsArrayBuffer(file);
       }
@@ -154,48 +159,47 @@
   <script src='inc/francisco-igor/midiplayer/MIDIFile.js'></script>
   <script src='inc/francisco-igor/midiplayer/MIDIPlayer.js'></script>
   <script>
-    // Set up MIDI players
-    function initializeMIDIPlayer(fileInputId) {
-      const positionInputId = fileInputId + "Pos";
-      const playPauseButtonId = fileInputId + "PlayButton";
-      const stopButtonId = fileInputId + "StopButton";
+    // Set up MIDI player
+    const midiPlayerId = 'outputMidi';
+    const positionInputId = midiPlayerId + "Pos";
+    const playPauseButtonId = midiPlayerId + "PlayButton";
+    const stopButtonId = midiPlayerId + "StopButton";
 
-      const pos = document.getElementById(positionInputId);
-      pos.value = 0;  
-          
-      var player = new MIDIPlayer(fileInputId);
-      const playPauseButton = document.getElementById(playPauseButtonId);
-      playPauseButton.onclick = function() {
-        if (player.state == player.PLAYING) {
-          player.pause();
-        } else {
-          player.play();
-        }
-      }
+    const pos = document.getElementById(positionInputId);
+    pos.value = 0;  
 
-      const stopButton = document.getElementById(stopButtonId);
-      stopButton.onclick = function() {
-        player.stop();
-        pos.value = 0;
-      }
-
-      player.onload = function(song) {
-          player.play();
-          pos.setAttribute("max", song.duration);
-      };
-
-      player.ontick = function(song, position) {
-          pos.value = position;
-      };
-
-      // stop playing when the window is unfocused
-      window.onblur=function(){
-          console.log("Blur", new Date())
-          player.pause();
+    var player = new MIDIPlayer();
+    const playPauseButton = document.getElementById(playPauseButtonId);
+    playPauseButton.onclick = function() {
+      if (player.state == player.PLAYING) {
+        player.pause();
+      } else {
+        player.play();
       }
     }
 
-    initializeMIDIPlayer('midiInput');
+    const stopButton = document.getElementById(stopButtonId);
+    stopButton.onclick = function() {
+      if (player.state != player.PLAYING) {
+        player.play();
+      }
+      player.stop();
+      pos.value = 0;
+    }
+
+    player.onload = function(song) {
+        pos.setAttribute("max", song.duration);
+    };
+
+    player.ontick = function(song, position) {
+        pos.value = position;
+    };
+
+    // stop playing when the window is unfocused
+    window.onblur=function(){
+        console.log("Blur", new Date())
+        player.pause();
+    }
   </script>
 </body>
 </html>
